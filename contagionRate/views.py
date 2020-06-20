@@ -8,6 +8,7 @@ from mpld3 import plugins
 from datetime import datetime, timedelta
 from threading import Thread
 
+
 # Create your views here.
 
 def index(request):
