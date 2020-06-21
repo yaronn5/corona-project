@@ -47,6 +47,7 @@ def index(request):
 
   results = {}
 
+  '''
   def scrape_wikipedia():
     url = "https://he.wikipedia.org/wiki/%D7%94%D7%AA%D7%A4%D7%A8%D7%A6%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A3_%D7%94%D7%A7%D7%95%D7%A8%D7%95%D7%A0%D7%94_%D7%91%D7%99%D7%A9%D7%A8%D7%90%D7%9C"
     req = requests.get(url, headers)
@@ -65,14 +66,14 @@ def index(request):
 
     #print(data)
     results['wikipedia'] = data
-
+  '''
 
   def scrape_worldometers():
     url_alt = 'https://www.worldometers.info/coronavirus/country/israel/'
     req = requests.get(url_alt, headers)
     soup = BeautifulSoup(req.content, 'html.parser')
     #print(soup)
-    mydivs = soup.find_all("div", class_="maincounter-number")
+    mydivs = soup.find_all("div", class_="number-table-main")
     #print(mydivs)
     divs = [ele.text.strip() for ele in mydivs]
     last_stat = divs[0]
@@ -83,18 +84,49 @@ def index(request):
     results['worldometers'] = last_stat
 
 
- 
+  def scrape_worldometers2():
+    url_alt = 'https://www.worldometers.info/coronavirus/country/israel/'
+    req = requests.get(url_alt, headers)
+    soup = BeautifulSoup(req.content, 'html.parser')
+    #print(soup)
+    all_scripts = soup.find_all('script')
+    dates = ""
+    values = ""
+    for script in all_scripts:
+      if 'graph-active-cases-total' in script.text:
+        #print(script)
+        script_text = "".join(script.text)
+        dates = re.sub(r'.*categories:\s*\[(.*?)\].*',  r'\1', script_text, flags=re.DOTALL)
+        values = re.sub(r'.*data:\s*\[(.*?)\].*',  r'\1', script_text, flags=re.DOTALL)
+        print (dates)
+        print (values)
+
+    d = dates.replace('"', '').split(',')
+    v = values.split(',')
+    dv = []
+    for i in range(len(v)):
+      dv.append((d[i], v[i]))
+
+    results['worldometers2'] = dv
+    #print(results['worldometers2'])
+
+    #print(results['worldometers2']
+
+    
+
+
+
 
   threads = []
-  process = Thread(target=scrape_wikipedia, args=[])
-  process.start()
-  threads.append(process)
+  #process = Thread(target=scrape_wikipedia, args=[])
+  #process.start()
+  #threads.append(process)
   process = Thread(target=scrape_worldometers, args=[])
   process.start()
   threads.append(process)
-  ##process = Thread(target=scrape_mako, args=[])
-  ##process.start()
-  ##threads.append(process)
+  process = Thread(target=scrape_worldometers2, args=[])
+  process.start()
+  threads.append(process)
 
   for process in threads:
     process.join()
@@ -105,7 +137,11 @@ def index(request):
   ##last_stat = str(max(int(results['worldometers']), int(results['mako'])))
   last_stat = results['worldometers']
   #print(last_stat)
-  data = results['wikipedia']
+  #data = results['wikipedia']
+  data2 = results['worldometers2']
+
+  #print(data)
+  #print(data2)
 
 
   
@@ -113,42 +149,41 @@ def index(request):
   datesList = []
   numSickList = []
 
-  for item in data:
-      #print(item)
-      #print('\n')
-      if len(item) == 3:
-          fullDate = item[0]
-          date = fullDate
-          date = re.sub(r'\d+-(\d+)-(\d+)', r'\2-\1', date, 0)
-          #print(date)
-          numSick = item[2]
-          numSick = re.sub(r'([\d,]+).*', r'\1', numSick, 0).replace(',', '')
-          #print(numSick)
-          real_date = datetime.strptime(fullDate, "%Y-%m-%d")
-          start_day = datetime.today() - timedelta(days=30)
-          #start_day = datetime(2020,3,15)
-          #print("start_day " + str(start_day))
-          if real_date >= start_day:
-              #print(real_date)
-              realDatesList.append(real_date)
-              datesList.append(date)
-              numSickList.append(numSick)
+  
+  
+  for item in data2:
+    #print(item[0])
+    #print(item[1])
+    fullDate = item[0]
+    fullDate = "2020 " + fullDate
+    real_date = datetime.strptime(fullDate, "%Y %b %d")
+    date = re.sub(r'\d+-(\d+)-(\d+).*', r'\2-\1', str(real_date), 0)
+    start_day = datetime.today() - timedelta(days=30)
+    numSick = item[1]
+    numSick = re.sub(r'([\d,]+).*', r'\1', numSick, 0).replace(',', '')
+    if real_date >= start_day:
+        #print(real_date)
+        realDatesList.append(real_date)
+        datesList.append(date)
+        numSickList.append(numSick)
+
+   
 
   if int(numSickList[len(numSickList)-1]) < int(last_stat):
     if realDatesList[len(realDatesList)-1].strftime("%j") == datetime.now().strftime("%j"):
       numSickList[len(numSickList)-1] = str(last_stat)
-    else:
-      today = re.sub(r'\d+-(\d+)-(\d+).*', r'\2-\1', str(datetime.today()), 0)
-      datesList.append(today)
-      numSickList.append(last_stat)
+    #else:
+      #today = re.sub(r'\d+-(\d+)-(\d+).*', r'\2-\1', str(datetime.today()), 0)
+      #datesList.append(today)
+      #numSickList.append(last_stat)
 
 
   #print("{} {}".format(last_stat, numSickList[len(numSickList)-1]))
 
 
 
-  print(datesList)
-  print(numSickList)
+  #print(datesList)
+  #print(numSickList)
 
 
   plt.rcParams.update({'font.size': 16})
@@ -178,7 +213,7 @@ def index(request):
     
 
   # setting x and y axis range 
-  plt.ylim(0.95, 1.1) 
+  plt.ylim(0.8, 2.0) 
   plt.xlim(0,len(datesList)-START_RANGE) 
 
 
@@ -242,7 +277,7 @@ def index(request):
   total_mult_days = i
   future_sick = float(current_sick) * math.pow(day_by_day_sickRate, 30)
 
-  ax.set_title('[ Contagion Rate - 3-day: ' + str(current_sickRate) + ' 1-day: ' + str(round(day_by_day_sickRate,3)) + ' ]  [ In 30 days, total of: ' + f'{round(future_sick):,}' + ' (+ ' + str(round(float(future_sick) - float(current_sick))) + ')  sick ]  [ Number of sick multiplies every ' + str(total_mult_days) + ' days ]')
+  ax.set_title('[ PHASE 2 ACTIVE CASES ] [ Contagion Rate- 3-day: ' + str(current_sickRate) + ' 1-day: ' + str(round(day_by_day_sickRate,3)) + ' ]  [ In 30 days, total of: ' + f'{round(future_sick):,}' + ' (+ ' + str(round(float(future_sick) - float(current_sick))) + ')  sick ]  [ Number of sick multiplies every ' + str(total_mult_days) + ' days ]')
         
   fig = plt.gcf()
 
@@ -258,7 +293,7 @@ def index(request):
 
   #mpld3.show() 
 
-
+  
   htmlText = ''' <html>\n<head> 
         <meta equiv="refresh" content="300">
         <meta name="MobileOptimized" content="width">
@@ -266,11 +301,10 @@ def index(request):
         <meta name="viewport" content="width=device-width">
         <meta name="viewport" content="width=device-width, initial-scale=1">'''
         
-        
   htmlText += mpld3.fig_to_html(fig)
   htmlText += '</head><body></body></html>'
-  #print(htmlText)
+  
+  print(htmlText)
   return HttpResponse(htmlText)
-
 
 #index("aaa")
