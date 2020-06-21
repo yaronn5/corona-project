@@ -90,6 +90,8 @@ def index(request):
     soup = BeautifulSoup(req.content, 'html.parser')
     #print(soup)
     all_scripts = soup.find_all('script')
+    dates = ""
+    values = ""
     for script in all_scripts:
       if 'graph-active-cases-total' in script.text:
         #print(script)
