@@ -98,8 +98,8 @@ def index(request):
         script_text = "".join(script.text)
         dates = re.sub(r'.*categories:\s*\[(.*?)\].*',  r'\1', script_text, flags=re.DOTALL)
         values = re.sub(r'.*data:\s*\[(.*?)\].*',  r'\1', script_text, flags=re.DOTALL)
-        #print (dates)
-        #print (values)
+        print (dates)
+        print (values)
 
     d = dates.replace('"', '').split(',')
     v = values.split(',')
