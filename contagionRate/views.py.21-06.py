@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt, mpld3
 from mpld3 import plugins
 from datetime import datetime, timedelta
 from threading import Thread
-import json
 
 
 # Create your views here.
@@ -73,7 +72,7 @@ def index(request):
     req = requests.get(url_alt, headers)
     soup = BeautifulSoup(req.content, 'html.parser')
     #print(soup)
-    mydivs = soup.find_all("div", class_="number-table-main")
+    mydivs = soup.find_all("div", class_="maincounter-number")
     #print(mydivs)
     divs = [ele.text.strip() for ele in mydivs]
     last_stat = divs[0]
@@ -84,55 +83,18 @@ def index(request):
     results['worldometers'] = last_stat
 
 
-  def scrape_worldometers2():
-    url_alt = 'https://www.worldometers.info/coronavirus/country/israel/'
-    req = requests.get(url_alt, headers)
-    soup = BeautifulSoup(req.content, 'html.parser')
-    #print(soup)
-    all_scripts = soup.find_all('script')
-    for script in all_scripts:
-      if 'graph-active-cases-total' in script.text:
-        #print(script)
-        script_text = "".join(script.text)
-        dates = re.sub(r'.*categories:\s*\[(.*?)\].*',  r'\1', script_text, flags=re.DOTALL)
-        values = re.sub(r'.*data:\s*\[(.*?)\].*',  r'\1', script_text, flags=re.DOTALL)
-        #print (dates)
-        #print (values)
-
-    d = dates.replace('"', '').split(',')
-    v = values.split(',')
-    dv = []
-    for i in range(len(v)):
-      dv.append((d[i], v[i]))
-
-    results['worldometers2'] = dv
-    #print(results['worldometers2'])
-
-        #print(results['worldometers2']
-
-    '''
-    divs = [ele.text.strip() for ele in mydivs]
-    last_stat = divs[0]
-    #print(last_stat)
-
-    last_stat = re.sub(r'<div>.*>([\d,])<.*</div>', r'\1', last_stat, 0).replace(',', '')
-    #print(last_stat)
-    results['worldometers'] = last_stat
-    '''
-
-
-
+ 
 
   threads = []
-  #process = Thread(target=scrape_wikipedia, args=[])
-  #process.start()
-  #threads.append(process)
+  process = Thread(target=scrape_wikipedia, args=[])
+  process.start()
+  threads.append(process)
   process = Thread(target=scrape_worldometers, args=[])
   process.start()
   threads.append(process)
-  process = Thread(target=scrape_worldometers2, args=[])
-  process.start()
-  threads.append(process)
+  ##process = Thread(target=scrape_mako, args=[])
+  ##process.start()
+  ##threads.append(process)
 
   for process in threads:
     process.join()
@@ -143,11 +105,7 @@ def index(request):
   ##last_stat = str(max(int(results['worldometers']), int(results['mako'])))
   last_stat = results['worldometers']
   #print(last_stat)
-  #data = results['wikipedia']
-  data2 = results['worldometers2']
-
-  #print(data)
-  #print(data2)
+  data = results['wikipedia']
 
 
   
@@ -155,7 +113,6 @@ def index(request):
   datesList = []
   numSickList = []
 
-  '''
   for item in data:
       #print(item)
       #print('\n')
@@ -176,41 +133,22 @@ def index(request):
               realDatesList.append(real_date)
               datesList.append(date)
               numSickList.append(numSick)
-    '''
-  
-  for item in data2:
-    #print(item[0])
-    #print(item[1])
-    fullDate = item[0]
-    fullDate = "2020 " + fullDate
-    real_date = datetime.strptime(fullDate, "%Y %b %d")
-    date = re.sub(r'\d+-(\d+)-(\d+).*', r'\2-\1', str(real_date), 0)
-    start_day = datetime.today() - timedelta(days=30)
-    numSick = item[1]
-    numSick = re.sub(r'([\d,]+).*', r'\1', numSick, 0).replace(',', '')
-    if real_date >= start_day:
-        #print(real_date)
-        realDatesList.append(real_date)
-        datesList.append(date)
-        numSickList.append(numSick)
-
-   
 
   if int(numSickList[len(numSickList)-1]) < int(last_stat):
     if realDatesList[len(realDatesList)-1].strftime("%j") == datetime.now().strftime("%j"):
       numSickList[len(numSickList)-1] = str(last_stat)
     else:
       today = re.sub(r'\d+-(\d+)-(\d+).*', r'\2-\1', str(datetime.today()), 0)
-      #datesList.append(today)
-      #numSickList.append(last_stat)
+      datesList.append(today)
+      numSickList.append(last_stat)
 
 
   #print("{} {}".format(last_stat, numSickList[len(numSickList)-1]))
 
 
 
-  #print(datesList)
-  #print(numSickList)
+  print(datesList)
+  print(numSickList)
 
 
   plt.rcParams.update({'font.size': 16})
@@ -240,7 +178,7 @@ def index(request):
     
 
   # setting x and y axis range 
-  plt.ylim(0.8, 2.0) 
+  plt.ylim(0.95, 1.1) 
   plt.xlim(0,len(datesList)-START_RANGE) 
 
 
@@ -304,7 +242,7 @@ def index(request):
   total_mult_days = i
   future_sick = float(current_sick) * math.pow(day_by_day_sickRate, 30)
 
-  ax.set_title('[ PHASE 2 ACTIVE CASES ] [ Contagion Rate- 3-day: ' + str(current_sickRate) + ' 1-day: ' + str(round(day_by_day_sickRate,3)) + ' ]  [ In 30 days, total of: ' + f'{round(future_sick):,}' + ' (+ ' + str(round(float(future_sick) - float(current_sick))) + ')  sick ]  [ Number of sick multiplies every ' + str(total_mult_days) + ' days ]')
+  ax.set_title('[ Contagion Rate - 3-day: ' + str(current_sickRate) + ' 1-day: ' + str(round(day_by_day_sickRate,3)) + ' ]  [ In 30 days, total of: ' + f'{round(future_sick):,}' + ' (+ ' + str(round(float(future_sick) - float(current_sick))) + ')  sick ]  [ Number of sick multiplies every ' + str(total_mult_days) + ' days ]')
         
   fig = plt.gcf()
 
@@ -320,18 +258,19 @@ def index(request):
 
   #mpld3.show() 
 
-  
-  #htmlText = ''' <html>\n<head> 
-  #      <meta equiv="refresh" content="300">
-  #      <meta name="MobileOptimized" content="width">
-  #      <meta name="HandheldFriendly" content="true">
-  #      <meta name="viewport" content="width=device-width">
-  #      <meta name="viewport" content="width=device-width, initial-scale=1">'''
+
+  htmlText = ''' <html>\n<head> 
+        <meta equiv="refresh" content="300">
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1">'''
+        
         
   htmlText += mpld3.fig_to_html(fig)
-  #tmlText += '</head><body></body></html>'
-  
-  ##print(htmlText)
+  htmlText += '</head><body></body></html>'
+  #print(htmlText)
   return HttpResponse(htmlText)
+
 
 #index("aaa")
