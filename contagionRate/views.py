@@ -48,6 +48,7 @@ def index(request):
 
   results = {}
 
+  '''
   def scrape_wikipedia():
     url = "https://he.wikipedia.org/wiki/%D7%94%D7%AA%D7%A4%D7%A8%D7%A6%D7%95%D7%AA_%D7%A0%D7%92%D7%99%D7%A3_%D7%94%D7%A7%D7%95%D7%A8%D7%95%D7%A0%D7%94_%D7%91%D7%99%D7%A9%D7%A8%D7%90%D7%9C"
     req = requests.get(url, headers)
@@ -66,7 +67,7 @@ def index(request):
 
     #print(data)
     results['wikipedia'] = data
-
+  '''
 
   def scrape_worldometers():
     url_alt = 'https://www.worldometers.info/coronavirus/country/israel/'
@@ -323,15 +324,15 @@ def index(request):
   #mpld3.show() 
 
   
-  #htmlText = ''' <html>\n<head> 
-  #      <meta equiv="refresh" content="300">
-  #      <meta name="MobileOptimized" content="width">
-  #      <meta name="HandheldFriendly" content="true">
-  #      <meta name="viewport" content="width=device-width">
-  #      <meta name="viewport" content="width=device-width, initial-scale=1">'''
+  htmlText = ''' <html>\n<head> 
+        <meta equiv="refresh" content="300">
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1">'''
         
   htmlText += mpld3.fig_to_html(fig)
-  #tmlText += '</head><body></body></html>'
+  htmlText += '</head><body></body></html>'
   
   ##print(htmlText)
   return HttpResponse(htmlText)
