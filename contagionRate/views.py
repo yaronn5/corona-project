@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt, mpld3
 from mpld3 import plugins
 from datetime import datetime, timedelta
 from threading import Thread
-import json
 
 
 # Create your views here.
