@@ -111,17 +111,9 @@ def index(request):
     results['worldometers2'] = dv
     #print(results['worldometers2'])
 
-        #print(results['worldometers2']
+    #print(results['worldometers2']
 
-    '''
-    divs = [ele.text.strip() for ele in mydivs]
-    last_stat = divs[0]
-    #print(last_stat)
-
-    last_stat = re.sub(r'<div>.*>([\d,])<.*</div>', r'\1', last_stat, 0).replace(',', '')
-    #print(last_stat)
-    results['worldometers'] = last_stat
-    '''
+    
 
 
 
@@ -158,28 +150,7 @@ def index(request):
   datesList = []
   numSickList = []
 
-  '''
-  for item in data:
-      #print(item)
-      #print('\n')
-      if len(item) == 3:
-          fullDate = item[0]
-          date = fullDate
-          date = re.sub(r'\d+-(\d+)-(\d+)', r'\2-\1', date, 0)
-          #print(date)
-          numSick = item[2]
-          numSick = re.sub(r'([\d,]+).*', r'\1', numSick, 0).replace(',', '')
-          #print(numSick)
-          real_date = datetime.strptime(fullDate, "%Y-%m-%d")
-          start_day = datetime.today() - timedelta(days=30)
-          #start_day = datetime(2020,3,15)
-          #print("start_day " + str(start_day))
-          if real_date >= start_day:
-              #print(real_date)
-              realDatesList.append(real_date)
-              datesList.append(date)
-              numSickList.append(numSick)
-    '''
+  
   
   for item in data2:
     #print(item[0])
@@ -202,8 +173,8 @@ def index(request):
   if int(numSickList[len(numSickList)-1]) < int(last_stat):
     if realDatesList[len(realDatesList)-1].strftime("%j") == datetime.now().strftime("%j"):
       numSickList[len(numSickList)-1] = str(last_stat)
-    else:
-      today = re.sub(r'\d+-(\d+)-(\d+).*', r'\2-\1', str(datetime.today()), 0)
+    #else:
+      #today = re.sub(r'\d+-(\d+)-(\d+).*', r'\2-\1', str(datetime.today()), 0)
       #datesList.append(today)
       #numSickList.append(last_stat)
 
