@@ -74,9 +74,9 @@ def index(request):
     all_scripts = soup.find_all('script')
     dates = ""
     values = ""
-    print(typeof(all_scripts))
+    print(type(all_scripts))
     for script in all_scripts:
-      print(typeof(script))
+      print(type(script))
       print("in scripts for loop)")
       #print(script)
       if 'graph-active-cases-total' in script.string:
