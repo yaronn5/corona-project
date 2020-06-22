@@ -144,6 +144,7 @@ def index(request):
     start_day = datetime.today() - timedelta(days=30)
     numSick = item[1]
     numSick = re.sub(r'([\d,]+).*', r'\1', numSick, 0).replace(',', '')
+    print(item)
     if real_date >= start_day:
         #print(real_date)
         realDatesList.append(real_date)
