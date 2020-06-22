@@ -78,7 +78,7 @@ def index(request):
     for script in all_scripts:
       print(type(script))
       print(type(script.text))
-      print(script.text)
+      print(script)
       print("in scripts for loop)")
       if script.text.find(r'graph-active-cases-total'):
         print(script.text)
