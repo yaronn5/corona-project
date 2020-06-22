@@ -80,9 +80,9 @@ def index(request):
       print(type(script.text))
       #print(script)
       print("in scripts for loop)")
-      if script.find('graph-active-cases-total') != -1:
-        print(script)
-        script_text = "".join(script)
+      if script.text.find('graph-active-cases-total') != -1:
+        print(script.text)
+        script_text = "".join(script.text)
         dates = re.sub(r'.*categories:\s*\[(.*?)\].*',  r'\1', script_text, flags=re.DOTALL)
         values = re.sub(r'.*data:\s*\[(.*?)\].*',  r'\1', script_text, flags=re.DOTALL)
         print (dates)
