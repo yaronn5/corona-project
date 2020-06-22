@@ -113,7 +113,8 @@ def index(request):
   for process in threads:
     process.join()
 
-
+  print("after processes")
+  
   #print('w'+results['worldometers'])
   #print(results['mako'])
   ##last_stat = str(max(int(results['worldometers']), int(results['mako'])))
