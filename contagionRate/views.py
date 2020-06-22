@@ -74,8 +74,9 @@ def index(request):
     all_scripts = soup.find_all('script')
     dates = ""
     values = ""
-    print(all_scripts)
+    #print(all_scripts)
     for script in all_scripts:
+      print("in scripts for loop)")
       if 'graph-active-cases-total' in script.text:
         #print(script)
         script_text = "".join(script.text)
@@ -87,7 +88,7 @@ def index(request):
     d = dates.replace('"', '').split(',')
     v = values.split(',')
     dv = []
-    for i in range(len(v)):
+    for i in range(len(d)):
       dv.append((d[i], v[i]))
 
     results['worldometers2'] = dv
