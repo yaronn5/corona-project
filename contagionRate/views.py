@@ -74,6 +74,7 @@ def index(request):
     all_scripts = soup.find_all('script')
     dates = ""
     values = ""
+    print(all_scripts)
     for script in all_scripts:
       if 'graph-active-cases-total' in script.text:
         #print(script)
@@ -103,9 +104,9 @@ def index(request):
   #process = Thread(target=scrape_wikipedia, args=[])
   #process.start()
   #threads.append(process)
-  process = Thread(target=scrape_worldometers, args=[])
-  process.start()
-  threads.append(process)
+  #process = Thread(target=scrape_worldometers, args=[])
+  #process.start()
+  #threads.append(process)
   process = Thread(target=scrape_worldometers2, args=[])
   process.start()
   threads.append(process)
@@ -134,6 +135,7 @@ def index(request):
 
   
   print("before for item in data2")
+  print(data2)
   for item in data2:
     print(item)
     #print(item[0])
