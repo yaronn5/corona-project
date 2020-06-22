@@ -114,7 +114,7 @@ def index(request):
     process.join()
 
   print("after processes")
-  
+
   #print('w'+results['worldometers'])
   #print(results['mako'])
   ##last_stat = str(max(int(results['worldometers']), int(results['mako'])))
@@ -150,7 +150,6 @@ def index(request):
         datesList.append(date)
         numSickList.append(numSick)
 
-   
 
   #if int(numSickList[len(numSickList)-1]) < int(last_stat):
     #if realDatesList[len(realDatesList)-1].strftime("%j") == datetime.now().strftime("%j"):
@@ -167,6 +166,8 @@ def index(request):
 
   #print(datesList)
   #print(numSickList)
+
+  print("have dates and numbers")
 
 
   plt.rcParams.update({'font.size': 16})
