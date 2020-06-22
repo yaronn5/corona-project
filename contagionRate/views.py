@@ -13,7 +13,7 @@ from threading import Thread
 
 def index(request):
 
-  print("start")
+  #print("start")
 
   # Define some CSS to control our custom labels
   css = """
@@ -74,20 +74,20 @@ def index(request):
     all_scripts = soup.find_all('script')
     dates = ""
     values = ""
-    print(type(all_scripts))
+    #print(type(all_scripts))
     for script in all_scripts:
-      print(type(script))
-      print(type(script.text))
-      print(script.text)
+      #print(type(script))
+      #print(type(script.text))
+      #print(script.text)
       script_text = "".join(script)
-      print("in scripts for loop)")
+      #print("in scripts for loop)")
       if script_text.find('graph-active-cases-total') != -1:
-        print(script.text)
+        #print(script.text)
         #script_text = "".join(script.text)
         dates = re.sub(r'.*categories:\s*\[(.*?)\].*',  r'\1', script_text, flags=re.DOTALL)
         values = re.sub(r'.*data:\s*\[(.*?)\].*',  r'\1', script_text, flags=re.DOTALL)
-        print (dates)
-        print (values)
+        #print (dates)
+        #print (values)
         break
 
     d = dates.replace('"', '').split(',')
@@ -120,7 +120,7 @@ def index(request):
   for process in threads:
     process.join()
 
-  print("after processes")
+  #print("after processes")
 
   #print('w'+results['worldometers'])
   #print(results['mako'])
@@ -140,10 +140,10 @@ def index(request):
   numSickList = []
 
   
-  print("before for item in data2")
-  print(data2)
+  #print("before for item in data2")
+  #print(data2)
   for item in data2:
-    print(item)
+    #print(item)
     #print(item[0])
     #print(item[1])
     fullDate = item[0]
@@ -153,7 +153,7 @@ def index(request):
     start_day = datetime.today() - timedelta(days=30)
     numSick = item[1]
     numSick = re.sub(r'([\d,]+).*', r'\1', numSick, 0).replace(',', '')
-    print(item)
+    #print(item)
     if real_date >= start_day:
         #print(real_date)
         realDatesList.append(real_date)
@@ -165,7 +165,7 @@ def index(request):
   #print(datesList)
   #print(numSickList)
 
-  print("have dates and numbers")
+  #print("have dates and numbers")
 
 
   plt.rcParams.update({'font.size': 16})
