@@ -133,7 +133,7 @@ def index(request):
   numSickList = []
 
   
-  
+  print("before for item in data2")
   for item in data2:
     #print(item[0])
     #print(item[1])
