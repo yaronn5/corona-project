@@ -135,6 +135,7 @@ def index(request):
   
   print("before for item in data2")
   for item in data2:
+    print(item)
     #print(item[0])
     #print(item[1])
     fullDate = item[0]
