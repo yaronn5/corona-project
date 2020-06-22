@@ -151,18 +151,6 @@ def index(request):
         numSickList.append(numSick)
 
 
-  #if int(numSickList[len(numSickList)-1]) < int(last_stat):
-    #if realDatesList[len(realDatesList)-1].strftime("%j") == datetime.now().strftime("%j"):
-      #numSickList[len(numSickList)-1] = str(last_stat)
-    #else:
-      #today = re.sub(r'\d+-(\d+)-(\d+).*', r'\2-\1', str(datetime.today()), 0)
-      #datesList.append(today)
-      #numSickList.append(last_stat)
-
-
-  #print("{} {}".format(last_stat, numSickList[len(numSickList)-1]))
-
-
 
   #print(datesList)
   #print(numSickList)
