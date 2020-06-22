@@ -88,6 +88,7 @@ def index(request):
         values = re.sub(r'.*data:\s*\[(.*?)\].*',  r'\1', script_text, flags=re.DOTALL)
         print (dates)
         print (values)
+        break
 
     d = dates.replace('"', '').split(',')
     v = values.split(',')
@@ -124,7 +125,7 @@ def index(request):
   #print('w'+results['worldometers'])
   #print(results['mako'])
   ##last_stat = str(max(int(results['worldometers']), int(results['mako'])))
-  last_stat = results['worldometers']
+  #last_stat = results['worldometers']
   #print(last_stat)
   #data = results['wikipedia']
   data2 = results['worldometers2']
