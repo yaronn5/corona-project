@@ -276,7 +276,7 @@ def index(request):
                                       voffset=-80, hoffset=30, css=css)
   plugins.connect(fig, tooltip)
 
-  mpld3.show() 
+  #mpld3.show() 
 
   
   htmlText = ''' <html>\n<head> 
