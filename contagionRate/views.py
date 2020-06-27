@@ -249,9 +249,12 @@ def index(request):
   yesterday_sick = float(numSickList[len(numSickList)-2])
   next_day_sick = float(current_sick)
   day_by_day_sickRate = today_sick/yesterday_sick
+  #print(today_sick)
+  #print(yesterday_sick)
+  #print(day_by_day_sickRate)
   #print(next_day_sick)
   i = 0
-  while next_day_sick < 2.0 * float(current_sick) :
+  while next_day_sick < 2.0 * float(current_sick) and  day_by_day_sickRate > 1.0:
     i += 1
     next_day_sick = next_day_sick * day_by_day_sickRate
     #print(next_day_sick)
@@ -273,7 +276,7 @@ def index(request):
                                       voffset=-80, hoffset=30, css=css)
   plugins.connect(fig, tooltip)
 
-  #mpld3.show() 
+  mpld3.show() 
 
   
   htmlText = ''' <html>\n<head> 
