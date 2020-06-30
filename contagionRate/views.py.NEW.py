@@ -52,7 +52,7 @@ def index(request):
 
   results = {}
 
-  
+  '''
   def scrape_health_gov_il():
       opts = Options()
       #opts.set_headless()
@@ -83,6 +83,42 @@ def index(request):
           break
 
       results['health.gov.il'] = last_stat
+    '''
+
+  def scrape_health_gov_il():
+        url_alt = 'https://datadashboard.health.gov.il/COVID-19/'
+        req = requests.get(url_alt, headers)
+        #print(soup)
+
+        i=0
+        soup = BeautifulSoup(req.content, 'html.parser')
+        old_page = soup
+        while True:
+          print(i)
+          i+=1
+          time.sleep(6)
+          soup = BeautifulSoup(req.content, 'html.parser')
+          new_page = soup
+          if new_page != old_page:
+              old_page = new_page
+          else:
+              break
+
+        
+        mydivs = soup.find_all("div", class_="title-header")
+        divs = [ele.text.strip() for ele in mydivs]
+        for result in divs:
+          outerHtml = result.get_attribute('outerHTML')
+          #print(outerHtml)
+          if "חולים פעילים" in outerHtml:
+            #print(result.text)
+            last_stat = re.sub(r'.*<h5.*>([\d,]*)</h5>.*', r'\1', outerHtml, 0).replace(',', '')
+            print(last_stat)
+            break
+
+        results['health.gov.il'] = last_stat
+
+
 
 
   def scrape_worldometers():
