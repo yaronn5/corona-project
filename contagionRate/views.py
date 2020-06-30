@@ -7,6 +7,10 @@ import matplotlib.pyplot as plt, mpld3
 from mpld3 import plugins
 from datetime import datetime, timedelta
 from threading import Thread
+import selenium
+from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options
+import time
 
 
 # Create your views here.
@@ -49,6 +53,37 @@ def index(request):
   results = {}
 
   
+  def scrape_health_gov_il():
+      opts = Options()
+      #opts.set_headless()
+      opts.headless = True
+      browser = Firefox(options=opts)
+      browser.get('https://datadashboard.health.gov.il/COVID-19/')
+      i=0
+      old_page = browser.page_source
+      while True:
+        print(i)
+        i+=1
+        time.sleep(2)
+        new_page = browser.page_source
+        if new_page != old_page:
+            old_page = new_page
+        else:
+            break
+
+      
+      res = browser.find_elements_by_class_name('title-header')
+      for result in res:
+        outerHtml = result.get_attribute('outerHTML')
+        #print(outerHtml)
+        if "חולים פעילים" in outerHtml:
+          #print(result.text)
+          last_stat = re.sub(r'.*<h5.*>([\d,]*)</h5>.*', r'\1', outerHtml, 0).replace(',', '')
+          print(last_stat)
+          break
+
+      results['health.gov.il'] = last_stat
+
 
   def scrape_worldometers():
     url_alt = 'https://www.worldometers.info/coronavirus/country/israel/'
@@ -110,9 +145,9 @@ def index(request):
   #process = Thread(target=scrape_wikipedia, args=[])
   #process.start()
   #threads.append(process)
-  #process = Thread(target=scrape_worldometers, args=[])
-  #process.start()
-  #threads.append(process)
+  process = Thread(target=scrape_health_gov_il, args=[])
+  process.start()
+  threads.append(process)
   process = Thread(target=scrape_worldometers2, args=[])
   process.start()
   threads.append(process)
@@ -164,9 +199,12 @@ def index(request):
 
   #print(datesList)
   #print(numSickList)
+  today = str(datetime.now().strftime("%d-%m"))
+  #today = re.sub(r'\d+-(\d+)-(\d+).*', r'\2-\1', str(datetime.now().strftime("%Y %b %d")), 0)
 
-  #print("have dates and numbers")
-
+  datesList.append(today)
+  numSickList.append(results['health.gov.il'])
+  
 
   plt.rcParams.update({'font.size': 16})
   DAY_RATE=3
