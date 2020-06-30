@@ -11,7 +11,8 @@ import selenium
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
 import time
-
+import sys
+sys.path.append('/app/vendor/firefox')
 
 # Create your views here.
 
