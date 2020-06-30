@@ -58,7 +58,7 @@ def index(request):
       opts = Options()
       #opts.set_headless()
       opts.headless = True
-      browser = Firefox(options=opts)
+      browser = Firefox(executable_path=" /app/vendor/firefox/firefox/geckodriver",options=opts)
       browser.get('https://datadashboard.health.gov.il/COVID-19/')
       i=0
       old_page = browser.page_source
