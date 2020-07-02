@@ -191,7 +191,6 @@ def index(request):
     numSick = re.sub(r'([\d,]+).*', r'\1', numSick, 0).replace(',', '')
     #print(item)
     if real_date >= start_day:
-        #print(real_date)
         realDatesList.append(real_date)
         datesList.append(date)
         numSickList.append(numSick)
