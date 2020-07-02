@@ -18,6 +18,7 @@ def index(request):
 
   #print("start")
 
+
   # Define some CSS to control our custom labels
   css = """
   table
