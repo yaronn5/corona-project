@@ -299,7 +299,8 @@ def index(request):
   total_mult_days = i
   future_sick = float(current_sick) * math.pow(day_by_day_sickRate, 30)
 
-  ax.set_title('[ PHASE 2 ACTIVE CASES ] [ Contagion Rate- 3-day: ' + str(current_sickRate) + ' 1-day: ' + str(round(day_by_day_sickRate,3)) + ' ]  [ In 30 days, total of: ' + f'{round(future_sick):,}' + ' (+ ' + str(round(float(future_sick) - float(current_sick))) + ')  sick ]  [ Number of sick multiplies every ' + str(total_mult_days) + ' days ]')
+  #ax.set_title('[ PHASE 2 ACTIVE CASES ] [ Contagion Rate- 3-day: ' + str(current_sickRate) + ' 1-day: ' + str(round(day_by_day_sickRate,3)) + ' ]  [ In 30 days, total of: ' + f'{round(future_sick):,}' + ' (+ ' + str(round(float(future_sick) - float(current_sick))) + ')  sick ]  [ Number of sick multiplies every ' + str(total_mult_days) + ' days ]')
+  ax.set_title('[ PHASE 2 ACTIVE CASES ] [ Contagion Rate- 3-day: ' + str(current_sickRate) + ' 1-day: ' + str(round(day_by_day_sickRate,3)) + ' ]  [ Number of sick multiplies every ' + str(total_mult_days) + ' days ]')
         
   fig = plt.gcf()
 
