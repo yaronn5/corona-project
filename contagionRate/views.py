@@ -84,7 +84,7 @@ def index(request):
 
       results['health.gov.il'] = last_stat
 
-
+  '''
   def scrape_worldometers():
     url_alt = 'https://www.worldometers.info/coronavirus/country/israel/'
     req = requests.get(url_alt, headers)
@@ -99,6 +99,23 @@ def index(request):
     last_stat = re.sub(r'<div>.*>([\d,])<.*</div>', r'\1', last_stat, 0).replace(',', '')
     #print(last_stat)
     results['worldometers'] = last_stat
+  '''
+
+  def scrape_n12():
+      url_alt = 'https://corona.mako.co.il/'
+      req = requests.get(url_alt, headers)
+      soup = BeautifulSoup(req.content, 'html.parser')
+      #print(soup)
+      myTag = soup.find_all("p", class_="stats-daily")
+      #print(mydivs)
+      tags = [ele.text.strip() for ele in myTag]
+      last_stat = tags[0]
+      print(last_stat)
+
+      last_stat = re.sub(r'([\d,]+).*', r'\1', last_stat, flags=re.DOTALL).replace(',', '')
+      print(last_stat)
+      results['n12'] = last_stat
+
 
 
   def scrape_worldometers2():
@@ -142,9 +159,9 @@ def index(request):
 
 
   threads = []
-  #process = Thread(target=scrape_wikipedia, args=[])
-  #process.start()
-  #threads.append(process)
+  process = Thread(target=scrape_n12, args=[])
+  process.start()
+  threads.append(process)
   #process = Thread(target=scrape_health_gov_il, args=[])
   #process.start()
   #threads.append(process)
@@ -201,8 +218,8 @@ def index(request):
   today = str(datetime.now().strftime("%d-%m"))
   #today = re.sub(r'\d+-(\d+)-(\d+).*', r'\2-\1', str(datetime.now().strftime("%Y %b %d")), 0)
 
-  #datesList.append(today)
-  #numSickList.append(results['health.gov.il'])
+  datesList.append(today)
+  numSickList.append(results['n12'])
   
 
   plt.rcParams.update({'font.size': 16})
