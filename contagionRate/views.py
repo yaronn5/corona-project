@@ -344,7 +344,6 @@ def index(request):
   htmlText += mpld3.fig_to_html(fig)
   htmlText += '</head><body></body></html>'
   
-  #print(htmlText)
   return HttpResponse(htmlText)
 
 #index("aaa")
