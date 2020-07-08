@@ -110,10 +110,10 @@ def index(request):
       #print(mydivs)
       tags = [ele.text.strip() for ele in myTag]
       last_stat = tags[0]
-      print(last_stat)
+      #print(last_stat)
 
       last_stat = re.sub(r'([\d,]+).*', r'\1', last_stat, flags=re.DOTALL).replace(',', '')
-      print(last_stat)
+      #print(last_stat)
       results['n12'] = last_stat
 
 
@@ -220,7 +220,7 @@ def index(request):
 
   datesList.append(today)
   numSickList.append(results['n12'])
-  
+  #print(numSickList)
 
   plt.rcParams.update({'font.size': 16})
   DAY_RATE=3
@@ -308,16 +308,20 @@ def index(request):
   #print(day_by_day_sickRate)
   #print(next_day_sick)
   i = 0
+  
   while next_day_sick < 2.0 * float(current_sick) and  day_by_day_sickRate > 1.0:
     i += 1
     next_day_sick = next_day_sick * day_by_day_sickRate
-    #print(next_day_sick)
+    print(next_day_sick)
 
   total_mult_days = i
   future_sick = float(current_sick) * math.pow(day_by_day_sickRate, 30)
 
   #ax.set_title('[ PHASE 2 ACTIVE CASES ] [ Contagion Rate- 3-day: ' + str(current_sickRate) + ' 1-day: ' + str(round(day_by_day_sickRate,3)) + ' ]  [ In 30 days, total of: ' + f'{round(future_sick):,}' + ' (+ ' + str(round(float(future_sick) - float(current_sick))) + ')  sick ]  [ Number of sick multiplies every ' + str(total_mult_days) + ' days ]')
-  ax.set_title('[ PHASE 2 ACTIVE CASES ] [ Contagion Rate- 3-day: ' + str(current_sickRate) + ' 1-day: ' + str(round(day_by_day_sickRate,3)) + ' ]  [ Number of sick multiplies every ' + str(total_mult_days) + ' days ]')
+  if total_mult_days > 0:
+    ax.set_title('[ PHASE 2 ACTIVE CASES ] [ Contagion Rate- 3-day: ' + str(current_sickRate) + ' 1-day: ' + str(round(day_by_day_sickRate,3)) + ' ]  [ Number of sick multiplies every ' + str(total_mult_days) + ' days ]')
+  else: 
+    ax.set_title('[ PHASE 2 ACTIVE CASES ] [ Contagion Rate- 3-day: ' + str(current_sickRate) + ' 1-day: ' + str(round(day_by_day_sickRate,3)) + ' ] ')
         
   fig = plt.gcf()
 
@@ -344,6 +348,7 @@ def index(request):
   htmlText += mpld3.fig_to_html(fig)
   htmlText += '</head><body></body></html>'
   
-  return HttpResponse(htmlText)
+  #print(htmlText)
+  #return HttpResponse(htmlText)
 
-#index("aaa")
+index("aaa")
