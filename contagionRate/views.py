@@ -349,6 +349,6 @@ def index(request):
   htmlText += '</head><body></body></html>'
   
   #print(htmlText)
-  #return HttpResponse(htmlText)
+  return HttpResponse(htmlText)
 
-index("aaa")
+#index("aaa")
