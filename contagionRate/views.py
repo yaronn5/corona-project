@@ -159,9 +159,9 @@ def index(request):
 
 
   threads = []
-  process = Thread(target=scrape_n12, args=[])
-  process.start()
-  threads.append(process)
+  #process = Thread(target=scrape_n12, args=[])
+  #process.start()
+  #threads.append(process)
   #process = Thread(target=scrape_health_gov_il, args=[])
   #process.start()
   #threads.append(process)
@@ -218,8 +218,8 @@ def index(request):
   today = str(datetime.now().strftime("%d-%m"))
   #today = re.sub(r'\d+-(\d+)-(\d+).*', r'\2-\1', str(datetime.now().strftime("%Y %b %d")), 0)
 
-  datesList.append(today)
-  numSickList.append(results['n12'])
+  #!!!datesList.append(today)
+  #!!!numSickList.append(results['n12'])
   #print(numSickList)
 
   plt.rcParams.update({'font.size': 16})
